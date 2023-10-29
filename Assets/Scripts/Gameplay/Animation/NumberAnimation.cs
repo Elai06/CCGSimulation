@@ -5,7 +5,7 @@ namespace Gameplay.Animation
 {
     public class NumberAnimation
     {
-        public void Scale(TextMeshPro text, string number)
+        public static void Scale(TextMeshPro text, string number)
         {
             var sequence = DOTween.Sequence();
             sequence.Append(text.rectTransform.DOScale(1.5f, 1f).OnComplete(() => { text.text = number; })

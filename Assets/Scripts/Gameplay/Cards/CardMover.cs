@@ -6,18 +6,17 @@ namespace Gameplay.Cards
     public class CardMover : MonoBehaviour, ICardMover
     {
         [SerializeField] private Vector3 _hoverScale = new(1.5f, 1.5f, 1.5f);
-
-        private Transform _gameHandTransform;
-        private Transform _battlefieldTransform;
-
+        
         private CardAnimation _cardAnimation = new();
 
         private bool _isDragging;
-
+        
+        private Transform _previusParent;
+        private Transform _gameHandTransform;
+        private Transform _battlefieldTransform;
+        
         private Vector3 _originalScale;
         private Vector3 _offset;
-
-        private Transform _previusParent;
 
         private void Start()
         {
