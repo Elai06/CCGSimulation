@@ -6,17 +6,19 @@ namespace Gameplay.Cards
     public class CardMover : MonoBehaviour, ICardMover
     {
         [SerializeField] private Vector3 _hoverScale = new(1.5f, 1.5f, 1.5f);
-        
+
         private CardAnimation _cardAnimation = new();
 
         private bool _isDragging;
-        
+
         private Transform _previusParent;
         private Transform _gameHandTransform;
         private Transform _battlefieldTransform;
-        
+
         private Vector3 _originalScale;
         private Vector3 _offset;
+
+        private bool _isBlock;
 
         private void Start()
         {
@@ -32,21 +34,25 @@ namespace Gameplay.Cards
 
         private void OnMouseEnter()
         {
+            if (_isBlock) return;
+
             ShowCard();
         }
 
         private void OnMouseExit()
         {
-            ReturnCard();
+            if (_isBlock) return;
+
+            HideCard();
         }
-    
+
         public void ShowCard()
         {
             _cardAnimation.ScaleAnimation(transform, _hoverScale.x);
             gameObject.transform.position += Vector3.back * 2;
         }
 
-        public void ReturnCard()
+        public void HideCard()
         {
             _cardAnimation.ScaleAnimation(transform, _originalScale.x);
             gameObject.transform.position += Vector3.forward * 2;
@@ -54,39 +60,42 @@ namespace Gameplay.Cards
 
         private void OnMouseDown()
         {
+            if (_isBlock) return;
+            
             _isDragging = true;
             _offset = gameObject.transform.position - GetMouseWorldPosition();
             _offset.z = 0;
-            transform.SetParent(transform.root.parent);
+            transform.SetParent(transform.parent.parent);
         }
 
         private void OnMouseUp()
         {
-            _isDragging = false;
+            if (_isBlock) return;
 
+            _isDragging = false;
             ChangeDeck();
         }
-    
+
         private void ChangeDeck()
         {
-            if (_battlefieldTransform.position.y - transform.position.y <= 3)
+            if (_battlefieldTransform.localPosition.y - transform.localPosition.y <= 3)
             {
                 gameObject.transform.SetParent(_battlefieldTransform);
                 return;
             }
 
-            if (transform.position.y - _gameHandTransform.position.y <= 3)
+            if (transform.localPosition.y - _gameHandTransform.localPosition.y <= 3)
             {
                 gameObject.transform.SetParent(_gameHandTransform);
                 return;
             }
-        
+
             gameObject.transform.SetParent(_previusParent);
         }
 
         private void Update()
         {
-            if (_isDragging)
+            if (_isDragging && !_isBlock)
             {
                 var mousePosition = GetMouseWorldPosition();
                 mousePosition.z = -2;
@@ -97,8 +106,13 @@ namespace Gameplay.Cards
         private Vector3 GetMouseWorldPosition()
         {
             Vector3 mousePoint = Input.mousePosition;
-            mousePoint.z = 9;
+            mousePoint.z = 0;
             return Camera.main.ScreenToWorldPoint(mousePoint);
+        }
+
+        public void SetBlock(bool isBlock)
+        {
+            _isBlock = isBlock;
         }
     }
 }

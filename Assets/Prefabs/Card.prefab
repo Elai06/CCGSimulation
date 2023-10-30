@@ -393,6 +393,7 @@ MonoBehaviour:
   _frontPicture: {fileID: 1888014564968468520}
   _attackText: {fileID: 1888014564596095896}
   _healthText: {fileID: 1888014563725539733}
+  _cardMover: {fileID: 1888014564275696423}
 --- !u!65 &1888014564275696422
 BoxCollider:
   m_ObjectHideFlags: 0

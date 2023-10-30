@@ -3,6 +3,6 @@
     public interface ICardMover
     {
         void ShowCard();
-        void ReturnCard();
+        void HideCard();
     }
 }

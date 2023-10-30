@@ -24,16 +24,28 @@ namespace Gameplay.GamingHands
             _cards = _cardsSpawner.InstatiateCards(transform);
         }
 
-        public void UpdateCharacteristics()
+        public void UpdateCard(Card card, CardMover cardMover)
+        {
+            cardMover.ShowCard();
+
+            card.ChangeHealth(RandomNumber());
+            card.ChangeAttack(RandomNumber());
+
+            HideCard(card, cardMover);
+        }
+
+        public void SimulateDamage()
         {
             if (!IsHaveCardsInHand()) return;
 
             var card = GetRandomCard();
             var cardMover = card.GetComponent<CardMover>();
-            cardMover.ShowCard();
-            card.ChangeHealth(RandomNumber());
-            card.ChangeAttack(RandomNumber());
 
+            UpdateCard(card, cardMover);
+        }
+
+        private void HideCard(Card card, CardMover cardMover)
+        {
             DOVirtual.DelayedCall(WAIT_ANIMATION_FINISH, () =>
             {
                 if (card.IsDied)
@@ -42,7 +54,7 @@ namespace Gameplay.GamingHands
                 }
                 else
                 {
-                    cardMover.ReturnCard();
+                    cardMover.HideCard();
                 }
             });
         }
@@ -55,11 +67,11 @@ namespace Gameplay.GamingHands
             {
                 return GetRandomCard();
             }
-            
+
             return card;
         }
 
-        private void RemoveCard(Card card)
+        public void RemoveCard(Card card)
         {
             var position = Vector3.right * 25 + Vector3.up * 5;
             card.transform.SetParent(card.transform.parent.parent);
@@ -81,6 +93,15 @@ namespace Gameplay.GamingHands
         private bool IsHaveCardsInHand()
         {
             return transform.childCount > 0;
+        }
+
+        public void BlockCardMover(bool isBlock)
+        {
+            for (int i = 0; i < _cards.Count; i++)
+            {
+                var card = _cards[i];
+                card.GetMover().SetBlock(isBlock);
+            }
         }
     }
 }

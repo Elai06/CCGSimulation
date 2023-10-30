@@ -2,6 +2,6 @@
 {
     public interface IGamingHand
     {
-        void UpdateCharacteristics();
+        void SimulateDamage();
     }
 }

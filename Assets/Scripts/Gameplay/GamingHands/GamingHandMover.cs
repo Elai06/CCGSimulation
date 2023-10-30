@@ -1,9 +1,9 @@
 ﻿using Gameplay.Animation;
 using UnityEngine;
 
-namespace Gameplay.GamingHand
+namespace Gameplay.GamingHands
 {
-    public class GamingHandDeckMover : MonoBehaviour
+    public class GamingHandMover : MonoBehaviour
     {
         private const int ROTATION_OFFSET = 5;
         private const float HEIGHT_STEP = 0.15f;

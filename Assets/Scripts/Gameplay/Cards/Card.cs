@@ -12,6 +12,7 @@ namespace Gameplay.Cards
         [SerializeField] private SpriteRenderer _frontPicture;
         [SerializeField] private TextMeshPro _attackText;
         [SerializeField] private TextMeshPro _healthText;
+        [SerializeField] private CardMover _cardMover;
 
         private Dictionary<ECardParametersType, int> _parametrs = new();
 
@@ -38,6 +39,14 @@ namespace Gameplay.Cards
             _frontPicture.sprite = sprite;
         }
 
+        private void ChangeParameter(ECardParametersType type, int value)
+        {
+            if (_parametrs.ContainsKey(type))
+            {
+                _parametrs[type] = value;
+            }
+        }
+        
         public void ChangeHealth(int health)
         {
             NumberAnimation.Scale(_healthText, health.ToString());
@@ -52,12 +61,9 @@ namespace Gameplay.Cards
             ChangeParameter(ECardParametersType.Attack, attack);
         }
 
-        private void ChangeParameter(ECardParametersType type, int value)
+        public CardMover GetMover()
         {
-            if (_parametrs.ContainsKey(type))
-            {
-                _parametrs[type] = value;
-            }
+            return _cardMover;
         }
     }
 }

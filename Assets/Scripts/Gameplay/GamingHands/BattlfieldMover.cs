@@ -1,10 +1,11 @@
 ﻿using Gameplay.Animation;
+using Gameplay.Cards;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Gameplay.GamingHands
 {
-    public class BattlfieldPositionController : MonoBehaviour
+    public class BattlfieldMover : MonoBehaviour
     {
         [SerializeField] private Button _cancelButton;
         [SerializeField] private GamingHand _gamingHand;
@@ -58,6 +59,22 @@ namespace Gameplay.GamingHands
             {
                 Cancel();
             }
+        }
+        
+        public Card GetCard(int index)
+        {
+            if (transform.childCount < index)
+            {
+                Debug.Log($"Don't have this Card");
+                return null;
+            }
+            
+            return transform.GetChild(index).GetComponent<Card>();
+        }
+
+        public void ReturnCardInHand(Card card)
+        {
+            card.transform.SetParent(_gamingHand.transform);
         }
     }
 }
