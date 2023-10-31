@@ -60,11 +60,6 @@ namespace Gameplay
 
             yield return new WaitForSeconds(2);
 
-            if (!playerCard.IsDied)
-            {
-                _playerBattflield.ReturnCardInHand(playerCard);
-            }
-
             ReturnCard(_playerBattflield, playerCard);
             ReturnCard(_enemyBattflield, enemyCard);
 

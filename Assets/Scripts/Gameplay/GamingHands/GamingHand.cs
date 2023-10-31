@@ -8,8 +8,6 @@ namespace Gameplay.GamingHands
 {
     public class GamingHand : MonoBehaviour, IGamingHand
     {
-        private const float WAIT_ANIMATION_FINISH = 1.5f;
-
         [SerializeField] private CardsSpawner _cardsSpawner;
 
         private IList<Card> _cards = new List<Card>();
@@ -24,16 +22,6 @@ namespace Gameplay.GamingHands
             _cards = _cardsSpawner.InstatiateCards(transform);
         }
 
-        public void UpdateCard(Card card, CardMover cardMover)
-        {
-            cardMover.ShowCard();
-
-            card.ChangeHealth(RandomNumber());
-            card.ChangeAttack(RandomNumber());
-
-            HideCard(card, cardMover);
-        }
-
         public void SimulateDamage()
         {
             if (!IsHaveCardsInHand()) return;
@@ -44,19 +32,27 @@ namespace Gameplay.GamingHands
             UpdateCard(card, cardMover);
         }
 
+        public Sequence UpdateCard(Card card, CardMover cardMover)
+        {
+            cardMover.ShowCard();
+
+            card.ChangeHealth(RandomNumber());
+            var seequnce = card.ChangeAttack(RandomNumber());
+
+            seequnce?.OnComplete(() => { HideCard(card, cardMover); });
+            return seequnce;
+        }
+        
         private void HideCard(Card card, CardMover cardMover)
         {
-            DOVirtual.DelayedCall(WAIT_ANIMATION_FINISH, () =>
+            if (card.IsDied)
             {
-                if (card.IsDied)
-                {
-                    RemoveCard(card);
-                }
-                else
-                {
-                    cardMover.HideCard();
-                }
-            });
+                RemoveCard(card);
+            }
+            else
+            {
+                cardMover.HideCard();
+            }
         }
 
         private Card GetRandomCard()
@@ -76,8 +72,8 @@ namespace Gameplay.GamingHands
             var position = Vector3.right * 25 + Vector3.up * 5;
             card.transform.SetParent(card.transform.parent.parent);
             _cards.Remove(card);
-            GamingHandAnimation.MovePositionAnimation(card.transform, position, Vector3.zero);
-            DOVirtual.DelayedCall(1, () => Destroy(card.gameObject));
+            var tween = GamingHandAnimation.MovePositionAnimation(card.transform, position, Vector3.zero);
+            tween?.OnComplete(() => { Destroy(card.gameObject); });
         }
 
         private int RandomNumber()

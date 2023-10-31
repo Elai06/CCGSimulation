@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 
 namespace Gameplay.Animation
@@ -7,10 +8,12 @@ namespace Gameplay.Animation
     {
         private Tween _tween;
 
-        public void ScaleAnimation(Transform transform, float scale)
+        public Tween ScaleAnimation(Transform transform, float scale)
         {
             _tween?.Kill();
-            _tween = transform.DOScale(scale, 0.25f);
+            _tween = transform.DOScale(scale, 1f);
+
+            return _tween;
         }
     }
 }

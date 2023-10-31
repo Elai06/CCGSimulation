@@ -1,4 +1,7 @@
-﻿using Gameplay.Animation;
+﻿using System;
+using System.Threading.Tasks;
+using DG.Tweening;
+using Gameplay.Animation;
 using UnityEngine;
 
 namespace Gameplay.Cards
@@ -46,10 +49,10 @@ namespace Gameplay.Cards
             HideCard();
         }
 
-        public void ShowCard()
+        public Tween ShowCard()
         {
-            _cardAnimation.ScaleAnimation(transform, _hoverScale.x);
             gameObject.transform.position += Vector3.back * 2;
+           return _cardAnimation.ScaleAnimation(transform, _hoverScale.x);
         }
 
         public void HideCard()
@@ -61,7 +64,7 @@ namespace Gameplay.Cards
         private void OnMouseDown()
         {
             if (_isBlock) return;
-            
+
             _isDragging = true;
             _offset = gameObject.transform.position - GetMouseWorldPosition();
             _offset.z = 0;

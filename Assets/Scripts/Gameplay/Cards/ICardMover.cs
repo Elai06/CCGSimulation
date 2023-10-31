@@ -2,7 +2,6 @@
 {
     public interface ICardMover
     {
-        void ShowCard();
-        void HideCard();
+       
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DG.Tweening;
 using Gameplay.Animation;
 using Gameplay.Enums;
 using TMPro;
@@ -55,10 +56,12 @@ namespace Gameplay.Cards
             IsDied = health <= 0;
         }
 
-        public void ChangeAttack(int attack)
+        public Sequence ChangeAttack(int attack)
         {
-            NumberAnimation.Scale(_attackText, attack.ToString());
+          var sequence = NumberAnimation.Scale(_attackText, attack.ToString());
             ChangeParameter(ECardParametersType.Attack, attack);
+
+            return sequence;
         }
 
         public CardMover GetMover()
